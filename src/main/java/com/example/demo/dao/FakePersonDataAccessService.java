@@ -11,46 +11,47 @@ import org.springframework.stereotype.Repository;
 
 @Repository("fakeDao") // semantics
 public class FakePersonDataAccessService implements PersonDao {
-    private static List<Person> DB = new ArrayList<>();
+    private static List<Person> DB = new ArrayList<>(); // the same as let array = [] in JS
 
     @Override
     public Person insertPerson(UUID id, Person person) {
-        DB.add(new Person(id, person.getName()));
+        DB.add(new Person(id, person.getName())); // same as array.push(new Class()) in JS
         return new Person(id, person.getName());
     }
 
     @Override
     public List<Person> getPeople() {
-        return DB;
+        return DB; // same as return array in JS
     }
 
     @Override
     public Optional<Person> getPersonById(UUID id) {
         return DB.stream().filter(person -> person.getId().equals(id))
-                .findFirst();
+                .findFirst(); // same as array.find(e => e == id)
     }
 
     @Override
-    public int deletePersonById(UUID id) {
+    public boolean deletePersonById(UUID id) {
         Optional<Person> personMaybe = getPersonById(id);
         if (personMaybe.isEmpty()) {
-            return 0;
+            return false;
         } else {
-            DB.remove(personMaybe.get());
-            return 1;
+            DB.remove(personMaybe.get()); // same as array.splice()
+            return true;
         }
     }
 
     @Override
-    public int updatePersonById(UUID id, Person person) {
-        return getPersonById(id).map(p -> {
+    public Person updatePersonById(UUID id, Person update) {
+        return getPersonById(id).map(person -> {
             int indexOfPersonToDelete = DB.indexOf(person);
             if (indexOfPersonToDelete >= 0) {
-                DB.set(indexOfPersonToDelete, person);
-                return 1;
+                DB.set(indexOfPersonToDelete, new Person(id, update.getName())); // this whole thing is same as
+                                                                                 // array.splice()
+                return new Person(id, update.getName());
             } else {
-                return 0;
+                return null;
             }
-        }).orElse(0);
+        }).orElse(null);
     }
 }

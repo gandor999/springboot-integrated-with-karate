@@ -18,8 +18,8 @@ public interface PersonDao {
 
     Optional<Person> getPersonById(UUID id);
 
-    int updatePersonById(UUID id, Person person);
+    Person updatePersonById(UUID id, Person person);
 
-    int deletePersonById(UUID id);
+    boolean deletePersonById(UUID id);
 
 }
